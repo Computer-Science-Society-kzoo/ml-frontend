@@ -12,8 +12,7 @@ import Head from "next/head";
 import { useState } from "react";
 
 interface Result {
-  model: string;
-  result: string;
+  data: any;
 }
 
 export default function Home() {
@@ -25,21 +24,6 @@ export default function Home() {
     theme.breakpoints.down("sm")
   );
 
-  const data = [
-    {
-      model: "ChatGPT 3.5",
-      result: "not confident",
-    },
-    {
-      model: "Unsupervised Model",
-      result: "confident",
-    },
-    {
-      model: "Semi-supervised Model",
-      result: "not confident",
-    },
-  ];
-
   const handleRequest = async () => {
     try {
       setLoading(true);
@@ -49,8 +33,14 @@ export default function Home() {
           method: "GET",
         }
       );
+
       const data = await res.json();
-      setResults(data);
+
+      const newResult = {
+        id: results.length + 1,
+        data: data,
+      };
+      setResults([newResult]);
       setLoading(false);
       setInput("");
     } catch (err) {
@@ -77,7 +67,6 @@ export default function Home() {
         <Typography variant="h5" fontWeight="700" marginBottom={10}>
           Try ML-GPT 👇
         </Typography>
-
         <textarea
           name="text"
           rows={6}
@@ -96,7 +85,6 @@ export default function Home() {
           onChange={(e: any) => setInput(e.target.value)}
           value={input}
         />
-
         <Box width="120px" marginY={10}>
           <Button
             fullWidth
@@ -119,11 +107,15 @@ export default function Home() {
           </Button>
         </Box>
         <Stack>
-          {data.length > 0 && (
+          {results.length > 0 && (
             <Stack direction="column" width="100%">
-              {data.map(({ result, model }, index) => (
+              {results.map(({ data }, index) => (
                 <Box key={index} padding={5}>
-                  <Output isMobile={isMobile} model={model} result={result} />
+                  <Output
+                    isMobile={isMobile}
+                    model={"ChatGPT3.5"}
+                    result={data["GPT3.5"]}
+                  />
                 </Box>
               ))}
             </Stack>
