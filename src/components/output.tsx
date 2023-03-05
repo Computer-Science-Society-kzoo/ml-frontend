@@ -4,15 +4,22 @@ import React from "react";
 export const Output = ({
   model,
   result,
+  isMobile,
 }: {
   model: string;
   result: string;
+  isMobile: boolean;
 }) => {
   return (
     <Box
-      width="400px"
+      width={isMobile ? "90vw" : "500px"}
       height="200px"
-      sx={{ background: "lightgrey", borderRadius: "10px" }}
+      sx={{
+        borderRadius: "10px",
+        boxShadow:
+          " 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+        backgroundColor: "white",
+      }}
       display="flex"
       flexDirection="column"
       justifyContent="space-evenly"

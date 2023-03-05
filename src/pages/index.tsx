@@ -4,7 +4,9 @@ import {
   Button,
   CircularProgress,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Head from "next/head";
 import { useState } from "react";
@@ -19,7 +21,24 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState<string>("");
 
-  console.log("https://mlgptbk.kzoocss.org/aleksandr?input=" + input);
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm")
+  );
+
+  const data = [
+    {
+      model: "ChatGPT 3.5",
+      result: "not confident",
+    },
+    {
+      model: "Unsupervised Model",
+      result: "confident",
+    },
+    {
+      model: "Semi-supervised Model",
+      result: "not confident",
+    },
+  ];
 
   const handleRequest = async () => {
     try {
@@ -48,11 +67,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Stack
-        width="100vw"
         minHeight="100vh"
         display="flex"
         justifyContent="center"
         alignItems="center"
+        paddingLeft="20px"
+        paddingRight="20px"
       >
         <Typography variant="h5" fontWeight="700" marginBottom={10}>
           Try ML-GPT 👇
@@ -63,7 +83,7 @@ export default function Home() {
           rows={6}
           placeholder="Please state your opinion about ChatGPT"
           style={{
-            padding: 20,
+            padding: 10,
             border: "2px solid #000000",
             borderRadius: 8,
             transition: "border-color 0.3s ease",
@@ -71,13 +91,13 @@ export default function Home() {
             overflow: "auto",
             outline: "none",
             lineHeight: "2",
-            minWidth: "600px",
+            width: isMobile ? "90vw" : "550px",
           }}
           onChange={(e: any) => setInput(e.target.value)}
           value={input}
         />
 
-        <Box width="120px" mt={10}>
+        <Box width="120px" marginY={10}>
           <Button
             fullWidth
             disableRipple
@@ -98,15 +118,18 @@ export default function Home() {
             Submit
           </Button>
         </Box>
-      </Stack>
-
-      {results.length > 0 && (
-        <Stack direction="row" width="100%" justifyContent="space-evenly">
-          <Output model="ChatGPT 3.5" result="not confident" />
-          <Output model="Unsupervised Model" result="confident" />
-          <Output model="Semi-supervised Model" result="not confident" />
+        <Stack>
+          {data.length > 0 && (
+            <Stack direction="column" width="100%">
+              {data.map(({ result, model }, index) => (
+                <Box key={index} padding={5}>
+                  <Output isMobile={isMobile} model={model} result={result} />
+                </Box>
+              ))}
+            </Stack>
+          )}
         </Stack>
-      )}
+      </Stack>
     </>
   );
 }
