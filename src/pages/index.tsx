@@ -1,7 +1,44 @@
-import { Stack, Typography, Button } from "@mui/material";
+import { Output } from "@/components/output";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Head from "next/head";
+import { useState } from "react";
+
+interface Result {
+  model: string;
+  result: string;
+}
 
 export default function Home() {
+  const [results, setResults] = useState<Result[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState<string>("");
+
+  console.log("https://mlgptbk.kzoocss.org/aleksandr?input=" + input);
+
+  const handleRequest = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "https://mlgptbk.kzoocss.org/aleksandr?input=" + input,
+        {
+          method: "GET",
+        }
+      );
+      const data = await res.json();
+      setResults(data);
+      setLoading(false);
+      setInput("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -10,7 +47,6 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Stack
         width="100vw"
         minHeight="100vh"
@@ -24,14 +60,53 @@ export default function Home() {
 
         <textarea
           name="text"
-          cols={70}
-          rows={10}
-          placeholder="Maximum of 250 characters"
-          style={{ padding: "20px" }}
+          rows={6}
+          placeholder="Please state your opinion about ChatGPT"
+          style={{
+            padding: 20,
+            border: "2px solid #000000",
+            borderRadius: 8,
+            transition: "border-color 0.3s ease",
+            resize: "none",
+            overflow: "auto",
+            outline: "none",
+            lineHeight: "2",
+            minWidth: "600px",
+          }}
+          onChange={(e: any) => setInput(e.target.value)}
+          value={input}
         />
 
-        <button>Get results</button>
+        <Box width="120px" mt={10}>
+          <Button
+            fullWidth
+            disableRipple
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#000000",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "lightgrey",
+                color: "#fff",
+              },
+            }}
+            onClick={handleRequest}
+            endIcon={
+              loading && <CircularProgress size={14} sx={{ color: "white" }} />
+            }
+          >
+            Submit
+          </Button>
+        </Box>
       </Stack>
+
+      {results.length > 0 && (
+        <Stack direction="row" width="100%" justifyContent="space-evenly">
+          <Output model="ChatGPT 3.5" result="not confident" />
+          <Output model="Unsupervised Model" result="confident" />
+          <Output model="Semi-supervised Model" result="not confident" />
+        </Stack>
+      )}
     </>
   );
 }
