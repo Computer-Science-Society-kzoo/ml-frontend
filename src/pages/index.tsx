@@ -9,6 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Head from "next/head";
+import Image from "next/image";
 import { useState } from "react";
 
 interface Result {
@@ -73,8 +74,18 @@ export default function Home() {
         alignItems="center"
         paddingLeft="20px"
         paddingRight="20px"
+        sx={{
+          background: "#1e2024",
+          backgroundImage: `url(/team.png)`,
+          backgroundSize: "cover",
+        }}
       >
-        <Typography variant="h5" fontWeight="700" marginBottom={10}>
+        <Typography
+          variant="h5"
+          fontWeight="700"
+          marginBottom={10}
+          sx={{ color: "#1cc86d" }}
+        >
           Try ML-GPT 👇
         </Typography>
         <textarea
@@ -83,7 +94,7 @@ export default function Home() {
           placeholder="Please state your opinion about ChatGPT"
           style={{
             padding: 10,
-            border: "2px solid #000000",
+            border: "3px solid #1cc86d",
             borderRadius: 8,
             transition: "border-color 0.3s ease",
             resize: "none",
@@ -101,7 +112,7 @@ export default function Home() {
             disableRipple
             sx={{
               textTransform: "none",
-              backgroundColor: "#000000",
+              backgroundColor: "#1cc86d",
               color: "#fff",
               "&:hover": {
                 backgroundColor: "lightgrey",
